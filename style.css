@@ -2222,7 +2222,7 @@ button {
 }
 
 /* ==========================================================================
-   CINEMATIC WELCOME INTRO & VIDEO EXPERIENCE
+   CINEMATIC FULLSCREEN INTRO VIDEO (NO OVERLAYS / NO TEXT / PURE VIDEO)
    ========================================================================== */
 
 /* Body locking when intro is active */
@@ -2233,26 +2233,23 @@ body.intro-active {
 
 /* Main page transition when revealed */
 .page-shell {
-  transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
-              transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
-              filter 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 0.85s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 body.intro-active .page-shell {
-  opacity: 0.92;
-  transform: scale(0.985);
-  filter: blur(4px);
+  opacity: 0.95;
+  transform: scale(0.99);
   pointer-events: none;
 }
 
 body.intro-revealed .page-shell {
   opacity: 1;
   transform: scale(1);
-  filter: blur(0);
   pointer-events: auto;
 }
 
-/* The Fullscreen Welcome Intro Overlay */
+/* Fullscreen Welcome Screen - completely clean black canvas */
 .welcome-intro-screen {
   position: fixed;
   inset: 0;
@@ -2260,22 +2257,17 @@ body.intro-revealed .page-shell {
   height: 100vh;
   height: 100dvh;
   z-index: 999999;
-  background-color: #080f06;
+  background-color: #000000;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+              visibility 0.75s ease;
 }
 
-/* Closing transition when intro finishes or user skips */
+/* Closing transition when intro completes */
 .welcome-intro-screen.closing {
   opacity: 0;
-  transform: scale(1.05);
   pointer-events: none;
 }
 
@@ -2284,560 +2276,14 @@ body.intro-revealed .page-shell {
   visibility: hidden !important;
 }
 
-/* Fullscreen Background Video */
+/* Fullscreen Video Element */
 .intro-video-element {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease;
-}
-
-.welcome-intro-screen.closing .intro-video-element {
-  transform: scale(1.08);
-  filter: blur(8px);
-}
-
-/* Scrim & Vignette Grading */
-.intro-overlay-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: 
-    radial-gradient(circle at center, rgba(8, 15, 6, 0.15) 0%, rgba(8, 15, 6, 0.6) 70%, rgba(6, 11, 4, 0.92) 100%),
-    linear-gradient(180deg, rgba(8, 15, 6, 0.82) 0%, rgba(8, 15, 6, 0.05) 25%, rgba(8, 15, 6, 0.05) 70%, rgba(6, 11, 4, 0.95) 100%);
-}
-
-/* Intro Top Bar */
-.intro-topbar {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 4%;
-  gap: 16px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(14, 26, 12, 0.72) 0%, rgba(14, 26, 12, 0.15) 100%);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.22);
-}
-
-.intro-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.intro-brand-crest {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(197, 160, 89, 0.28) 0%, rgba(26, 46, 21, 0.9) 70%);
-  border: 1px solid rgba(197, 160, 89, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-}
-
-.intro-peacock-img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-}
-
-.intro-brand-name {
-  display: block;
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  line-height: 1.1;
-}
-
-.intro-brand-sub {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-light);
-  opacity: 0.95;
-  margin-top: 3px;
-}
-
-/* Controls Cluster */
-.intro-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.intro-pill-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
-  background: rgba(17, 32, 14, 0.7);
-  border: 1px solid rgba(197, 160, 89, 0.35);
-  border-radius: 999px;
-  color: #f7f1e4;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all 0.25s ease;
-  user-select: none;
-}
-
-.intro-pill-btn:hover {
-  background: rgba(26, 46, 21, 0.9);
-  border-color: var(--gold);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(197, 160, 89, 0.2);
-}
-
-.intro-audio-btn.pulse-glow {
-  border-color: rgba(197, 160, 89, 0.6);
-  box-shadow: 0 0 16px rgba(197, 160, 89, 0.3);
-  animation: pulseAudioGlow 2.4s infinite ease-in-out;
-}
-
-@keyframes pulseAudioGlow {
-  0%, 100% {
-    box-shadow: 0 0 12px rgba(197, 160, 89, 0.25);
-    border-color: rgba(197, 160, 89, 0.45);
-  }
-  50% {
-    box-shadow: 0 0 24px rgba(197, 160, 89, 0.65);
-    border-color: var(--gold-light);
-  }
-}
-
-.intro-audio-btn.is-unmuted {
-  background: rgba(37, 63, 31, 0.85);
-  border-color: var(--gold-light);
-  color: #ffffff;
-}
-
-.intro-enter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 22px;
-  background: linear-gradient(135deg, #c5a059 0%, #e2c88f 50%, #b89146 100%);
-  color: #11200e;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(197, 160, 89, 0.35);
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  user-select: none;
-}
-
-.intro-enter-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 26px rgba(197, 160, 89, 0.55);
-  color: #080f06;
-}
-
-.intro-enter-btn svg {
-  transition: transform 0.25s ease;
-}
-
-.intro-enter-btn:hover svg {
-  transform: translateX(3px);
-}
-
-/* Center Cinematic Hero Overlay */
-.intro-center-hero {
-  position: relative;
-  z-index: 10;
-  max-width: 860px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 0 24px;
-  pointer-events: none;
-  animation: fadeCenterHero 7s forwards ease-in-out;
-}
-
-@keyframes fadeCenterHero {
-  0% {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  15% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0.25;
-    transform: translateY(-8px);
-  }
-}
-
-.intro-center-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
-  background: rgba(17, 32, 14, 0.75);
-  border: 1px solid rgba(197, 160, 89, 0.45);
-  border-radius: 999px;
-  color: var(--gold-light);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  backdrop-filter: blur(8px);
-}
-
-.center-badge-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 8px var(--gold);
-}
-
-.intro-center-title {
-  font-family: var(--font-serif);
-  font-size: clamp(34px, 5.5vw, 68px);
-  font-weight: 500;
-  color: #ffffff;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
-  margin-bottom: 14px;
-}
-
-.intro-gold-italic {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--gold-light);
-  text-shadow: 0 0 30px rgba(197, 160, 89, 0.45);
-}
-
-.intro-center-caption {
-  font-size: clamp(13px, 1.6vw, 17px);
-  color: #e2e8de;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-/* Intro Footer Bar */
-.intro-footer {
-  position: relative;
-  z-index: 10;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(0deg, rgba(8, 15, 6, 0.85) 0%, rgba(8, 15, 6, 0.45) 80%, transparent 100%);
-  padding: 0 4% 20px;
-}
-
-/* Progress Track */
-.intro-progress-track {
-  width: 100%;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  transition: height 0.2s ease;
-  margin-bottom: 14px;
-}
-
-.intro-progress-track:hover {
-  height: 7px;
-}
-
-.intro-progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #c5a059 0%, #e8d39e 100%);
-  border-radius: 999px;
-  box-shadow: 0 0 10px rgba(197, 160, 89, 0.8);
-  transition: width 0.15s linear;
-}
-
-.intro-footer-details {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  color: #d1d9cd;
-  font-size: 12.5px;
-}
-
-.intro-timer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--gold-light);
-  letter-spacing: 0.05em;
-  background: rgba(17, 32, 14, 0.65);
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(197, 160, 89, 0.25);
-}
-
-.timer-sep {
-  opacity: 0.4;
-}
-
-.intro-auto-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #cbd5c6;
-  font-size: 12px;
-  letter-spacing: 0.03em;
-}
-
-.note-pulse {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px #4ade80;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-.note-divider {
-  opacity: 0.4;
-}
-
-.intro-auto-note kbd {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-size: 10.5px;
-  font-family: inherit;
-  color: #ffffff;
-}
-
-.intro-text-skip-btn {
-  background: none;
+  background: #000000;
   border: none;
-  color: var(--gold-light);
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.intro-text-skip-btn:hover {
-  color: #ffffff;
-  text-decoration: underline;
-  transform: translateX(2px);
-}
-
-/* ==========================================================================
-   REPLAY TOUR BUTTONS ON MAIN WEBSITE
-   ========================================================================== */
-
-/* Hero Section "Watch Tour Film" Button */
-.btn-video-tour {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
-  background: rgba(26, 46, 21, 0.08);
-  border: 1.5px solid var(--forest);
-  border-radius: 999px;
-  color: var(--forest-dark);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.btn-video-tour svg {
-  color: var(--gold);
-  transition: transform 0.25s ease;
-}
-
-.btn-video-tour:hover {
-  background: var(--forest);
-  color: #ffffff;
-  border-color: var(--forest);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(37, 63, 31, 0.2);
-}
-
-.btn-video-tour:hover svg {
-  transform: scale(1.15);
-  color: var(--gold-light);
-}
-
-/* Floating Tour Badge on Hero Image Box */
-.hero-play-tour-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 16px 8px 10px;
-  background: rgba(14, 26, 12, 0.82);
-  border: 1px solid rgba(197, 160, 89, 0.5);
-  border-radius: 999px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  transition: all 0.3s ease;
-}
-
-.hero-play-tour-badge:hover {
-  transform: translateY(-2px) scale(1.03);
-  border-color: var(--gold);
-  box-shadow: 0 12px 28px rgba(197, 160, 89, 0.3);
-  background: rgba(20, 36, 17, 0.92);
-}
-
-.play-icon-box {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #c5a059 0%, #dec38a 100%);
-  color: #11200e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.play-pulse-ring {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  opacity: 0.7;
-  animation: pulseRing 2.2s infinite ease-out;
-  pointer-events: none;
-}
-
-@keyframes pulseRing {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-
-.play-badge-copy {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-
-.play-badge-title {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.03em;
-  line-height: 1.15;
-}
-
-.play-badge-sub {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--gold-light);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ==========================================================================
-   MOBILE & RESPONSIVE ADJUSTMENTS FOR CINEMATIC INTRO
-   ========================================================================== */
-@media (max-width: 768px) {
-  .intro-topbar {
-    padding: 16px 4%;
-  }
-  .intro-brand-name {
-    font-size: 16px;
-  }
-  .intro-brand-sub {
-    font-size: 9.5px;
-  }
-  .intro-brand-crest {
-    width: 38px;
-    height: 38px;
-  }
-  .intro-peacock-img {
-    width: 22px;
-    height: 22px;
-  }
-  .intro-pill-btn {
-    padding: 8px 12px;
-    font-size: 11.5px;
-  }
-  .intro-enter-btn {
-    padding: 8px 16px;
-    font-size: 12px;
-  }
-  #playPauseLabel,
-  .intro-auto-note .note-keys,
-  .intro-auto-note .note-divider {
-    display: none;
-  }
-  .intro-center-hero {
-    padding: 0 16px;
-  }
-  .intro-center-title {
-    font-size: 32px;
-  }
-  .intro-footer {
-    padding: 0 4% 16px;
-  }
-  .intro-footer-details {
-    font-size: 11px;
-  }
-  .hero-play-tour-badge {
-    top: 12px;
-    right: 12px;
-    padding: 6px 12px 6px 8px;
-  }
-  .play-icon-box {
-    width: 28px;
-    height: 28px;
-  }
-  .btn-video-tour {
-    width: 100%;
-    justify-content: center;
-  }
+  outline: none;
 }
