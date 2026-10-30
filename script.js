@@ -218,4 +218,215 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 7000);
     });
   }
+
+  // 8. Cinematic Welcome Intro Video Experience
+  const welcomeIntro = document.getElementById('welcomeIntro');
+  const introVideo = document.getElementById('introVideo');
+  const introAudioBtn = document.getElementById('introAudioBtn');
+  const audioLabel = document.getElementById('audioLabel');
+  const introPlayPauseBtn = document.getElementById('introPlayPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const playPauseLabel = document.getElementById('playPauseLabel');
+  const skipIntroBtn = document.getElementById('skipIntroBtn');
+  const quickEnterLink = document.getElementById('quickEnterLink');
+  const introProgressFill = document.getElementById('introProgressFill');
+  const introProgressTrack = document.getElementById('introProgressTrack');
+  const introCurrentTime = document.getElementById('introCurrentTime');
+  const introDuration = document.getElementById('introDuration');
+  const heroReplayVideoBtn = document.getElementById('heroReplayVideoBtn');
+  const heroPlayTourBadge = document.getElementById('heroPlayTourBadge');
+
+  if (welcomeIntro && introVideo) {
+    let isIntroActive = true;
+
+    // Helper: format seconds to MM:SS
+    const formatTime = (secs) => {
+      if (isNaN(secs) || secs < 0) return '00:00';
+      const m = Math.floor(secs / 60);
+      const s = Math.floor(secs % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
+    // Transition smoothly into main website
+    function openWebsite() {
+      if (!isIntroActive) return;
+      isIntroActive = false;
+
+      welcomeIntro.classList.add('closing');
+      document.body.classList.remove('intro-active');
+      document.body.classList.add('intro-revealed');
+
+      setTimeout(() => {
+        try {
+          introVideo.pause();
+        } catch (err) {
+          console.warn('Video pause error:', err);
+        }
+        welcomeIntro.classList.add('intro-hidden');
+      }, 850);
+    }
+
+    // Replay intro video anytime from website
+    function openIntro(withSound = true) {
+      isIntroActive = true;
+      welcomeIntro.classList.remove('intro-hidden', 'closing');
+      document.body.classList.remove('intro-revealed');
+      document.body.classList.add('intro-active');
+
+      introVideo.currentTime = 0;
+      if (withSound) {
+        introVideo.muted = false;
+        updateAudioUI(false);
+      }
+      
+      const playPromise = introVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          introVideo.muted = true;
+          updateAudioUI(true);
+          introVideo.play();
+        });
+      }
+      updatePlayPauseUI(false);
+    }
+
+    // Update audio UI state
+    function updateAudioUI(isMuted) {
+      if (!introAudioBtn) return;
+      const iconMuted = introAudioBtn.querySelector('.icon-muted');
+      const iconUnmuted = introAudioBtn.querySelector('.icon-unmuted');
+
+      if (isMuted) {
+        if (iconMuted) iconMuted.style.display = 'block';
+        if (iconUnmuted) iconUnmuted.style.display = 'none';
+        if (audioLabel) audioLabel.textContent = 'Sound: Off';
+        introAudioBtn.classList.remove('is-unmuted');
+        introAudioBtn.classList.add('pulse-glow');
+        introAudioBtn.setAttribute('title', 'Click to Unmute');
+      } else {
+        if (iconMuted) iconMuted.style.display = 'none';
+        if (iconUnmuted) iconUnmuted.style.display = 'block';
+        if (audioLabel) audioLabel.textContent = 'Sound: On';
+        introAudioBtn.classList.add('is-unmuted');
+        introAudioBtn.classList.remove('pulse-glow');
+        introAudioBtn.setAttribute('title', 'Click to Mute');
+      }
+    }
+
+    // Update play/pause UI state
+    function updatePlayPauseUI(isPaused) {
+      if (!introPlayPauseBtn) return;
+      if (isPaused) {
+        if (playIcon) playIcon.style.display = 'block';
+        if (pauseIcon) pauseIcon.style.display = 'none';
+        if (playPauseLabel) playPauseLabel.textContent = 'Play';
+      } else {
+        if (playIcon) playIcon.style.display = 'none';
+        if (pauseIcon) pauseIcon.style.display = 'block';
+        if (playPauseLabel) playPauseLabel.textContent = 'Pause';
+      }
+    }
+
+    // Initialize initial state on load
+    document.body.classList.add('intro-active');
+    introVideo.muted = true; // Required for reliable browser autoplay
+    updateAudioUI(true);
+
+    const initialPlay = introVideo.play();
+    if (initialPlay !== undefined) {
+      initialPlay.then(() => {
+        updatePlayPauseUI(false);
+      }).catch((err) => {
+        console.log('Autoplay deferred until user interaction:', err);
+        updatePlayPauseUI(true);
+      });
+    }
+
+    // When the video finishes playing -> auto open website!
+    introVideo.addEventListener('ended', () => {
+      openWebsite();
+    });
+
+    // Track video time & progress
+    introVideo.addEventListener('timeupdate', () => {
+      if (!introVideo.duration) return;
+      const progressPercent = (introVideo.currentTime / introVideo.duration) * 100;
+      if (introProgressFill) {
+        introProgressFill.style.width = `${progressPercent}%`;
+      }
+      if (introCurrentTime) {
+        introCurrentTime.textContent = formatTime(introVideo.currentTime);
+      }
+      if (introDuration) {
+        introDuration.textContent = formatTime(introVideo.duration);
+      }
+    });
+
+    introVideo.addEventListener('loadedmetadata', () => {
+      if (introDuration) {
+        introDuration.textContent = formatTime(introVideo.duration);
+      }
+    });
+
+    // Click on progress track to seek
+    if (introProgressTrack) {
+      introProgressTrack.addEventListener('click', (e) => {
+        const rect = introProgressTrack.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        if (introVideo.duration) {
+          introVideo.currentTime = pos * introVideo.duration;
+        }
+      });
+    }
+
+    // Sound toggle button click
+    if (introAudioBtn) {
+      introAudioBtn.addEventListener('click', () => {
+        introVideo.muted = !introVideo.muted;
+        updateAudioUI(introVideo.muted);
+      });
+    }
+
+    // Play/Pause button click
+    if (introPlayPauseBtn) {
+      introPlayPauseBtn.addEventListener('click', () => {
+        if (introVideo.paused) {
+          introVideo.play();
+          updatePlayPauseUI(false);
+        } else {
+          introVideo.pause();
+          updatePlayPauseUI(true);
+        }
+      });
+    }
+
+    // Skip / Enter buttons
+    if (skipIntroBtn) {
+      skipIntroBtn.addEventListener('click', openWebsite);
+    }
+    if (quickEnterLink) {
+      quickEnterLink.addEventListener('click', openWebsite);
+    }
+
+    // Keyboard shortcuts: ESC or Space to skip, M to mute/unmute
+    document.addEventListener('keydown', (e) => {
+      if (!isIntroActive) return;
+      if (e.key === 'Escape' || e.code === 'Space') {
+        e.preventDefault();
+        openWebsite();
+      } else if (e.key === 'm' || e.key === 'M') {
+        introVideo.muted = !introVideo.muted;
+        updateAudioUI(introVideo.muted);
+      }
+    });
+
+    // Replay buttons on main website
+    if (heroReplayVideoBtn) {
+      heroReplayVideoBtn.addEventListener('click', () => openIntro(true));
+    }
+    if (heroPlayTourBadge) {
+      heroPlayTourBadge.addEventListener('click', () => openIntro(true));
+    }
+  }
 });
