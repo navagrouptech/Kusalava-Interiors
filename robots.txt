@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /scratch/
+Disallow: /serve.js
+
+Sitemap: https://kusalavainteriorss.web.app/sitemap.xml
