@@ -358,89 +358,7 @@ button {
 }
 
 /* ==========================================================================
-   2. TOP ANNOUNCEMENT BAR
-   ========================================================================== */
-.announcement-bar {
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-  position: relative;
-  z-index: 100;
-}
-
-.announcement-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.55rem 1.5rem;
-  max-width: 1320px;
-  margin: 0 auto;
-}
-
-.announcement-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-editorial);
-  color: var(--gold-light);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
-}
-
-.pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--gold-primary);
-  box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7);
-  animation: pulseGold 2s infinite;
-}
-
-@keyframes pulseGold {
-  0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7); }
-  70% { box-shadow: 0 0 0 8px rgba(197, 160, 89, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
-}
-
-.announcement-text {
-  display: none;
-  font-family: var(--font-body);
-  color: var(--text-light-muted);
-}
-
-@media (min-width: 860px) {
-  .announcement-text {
-    display: block;
-  }
-}
-
-.announcement-contacts {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.announcement-link {
-  color: #ffffff;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-weight: 500;
-}
-
-.announcement-link:hover {
-  color: var(--gold-light);
-}
-
-.announcement-sep {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-/* ==========================================================================
-   3. HEADER & NAVIGATION
+   2. HEADER & NAVIGATION
    ========================================================================== */
 .site-header {
   position: sticky;
@@ -474,60 +392,28 @@ button {
 .brand-link {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
   color: inherit;
+  transition: transform var(--transition-smooth);
 }
 
-.brand-emblem-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-marble);
-  border: 1px solid var(--border-gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: var(--transition-smooth);
-  flex-shrink: 0;
-}
-
-.brand-link:hover .brand-emblem-wrap {
-  border-color: var(--gold-primary);
-  transform: scale(1.05);
-  box-shadow: 0 4px 18px var(--gold-glow);
-}
-
-.brand-emblem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
+.brand-header-logo-img {
+  height: 52px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
   display: block;
+  transition: transform var(--transition-smooth), opacity var(--transition-fast);
 }
 
-.brand-typography {
-  display: flex;
-  flex-direction: column;
+.brand-link:hover .brand-header-logo-img {
+  transform: scale(1.03);
 }
 
-.brand-name {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  letter-spacing: 0.12em;
-  color: var(--text-main);
-  line-height: 1.1;
-  font-weight: 600;
-}
-
-.brand-tagline {
-  font-family: var(--font-editorial);
-  font-size: 0.72rem;
-  letter-spacing: 0.28em;
-  color: var(--gold-primary);
-  font-weight: 600;
-  margin-top: 0.14rem;
+.mobile-drawer-header .brand-link .brand-header-logo-img {
+  height: 46px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
 }
 
 /* Nav Links */
@@ -981,13 +867,15 @@ button {
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  aspect-ratio: 4/5;
+  border: 1px solid var(--border-gold);
+  background: var(--bg-marble);
+  aspect-ratio: 3/2;
 }
 
 .about-image-frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.6s ease;
 }
 
@@ -1985,38 +1873,20 @@ button {
 .footer-brand-logo {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
-.footer-emblem-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-marble);
-  border: 1px solid var(--border-gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.footer-emblem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
+.footer-brand-logo-img {
+  height: 56px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
   display: block;
+  transition: transform var(--transition-smooth);
 }
 
-.footer-brand-text .brand-name {
-  color: #ffffff;
-}
-
-.footer-brand-text .brand-tagline {
-  color: var(--gold-light);
+.footer-brand-logo-img:hover {
+  transform: scale(1.03);
 }
 
 .footer-desc {

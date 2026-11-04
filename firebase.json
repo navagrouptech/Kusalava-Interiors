@@ -1,11 +1,13 @@
 {
   "hosting": {
+    "site": "kusalavainteriorss",
     "public": ".",
     "ignore": [
       "firebase.json",
       ".firebaserc",
       "serve.js",
       "README.txt",
+      "scratch/**",
       "**/.*",
       "**/node_modules/**"
     ],
