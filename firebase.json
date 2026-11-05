@@ -15,6 +15,24 @@
     ],
     "headers": [
       {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
         "source": "assets/**",
         "headers": [
           {
@@ -24,7 +42,7 @@
         ]
       },
       {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|mp4)",
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|mp4|ico)",
         "headers": [
           {
             "key": "Cache-Control",

@@ -942,54 +942,79 @@ button {
   text-transform: uppercase;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .hero-content {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 0 4rem 0;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3rem 0 4rem 0 !important;
   }
 
   .hero-headline {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   .hero-supporting {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2rem;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 2rem !important;
   }
 
-  .hero-cta-group {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2.75rem;
-    width: 100%;
+  .hero-cta-group,
+  .hero-cta-centered {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 2.75rem !important;
+    width: 100% !important;
   }
 
-  .hero-stats-ribbon {
-    grid-template-columns: 1fr;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    gap: 1.5rem;
-    width: 100%;
-    padding-top: 2rem;
+  .hero-cta-group .btn {
+    margin: 0 auto !important;
+  }
+
+  .hero-stats-ribbon,
+  .hero-stats-centered {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    gap: 1.25rem !important;
+    width: 100% !important;
+    padding-top: 2rem !important;
   }
 
   .stat-item {
-    align-items: center;
-    text-align: center;
+    align-items: center !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  .stat-number,
+  .stat-label {
+    text-align: center !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-stats-ribbon,
+  .hero-stats-centered {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
   }
 }
 
