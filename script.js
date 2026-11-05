@@ -246,13 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 1. CINEMATIC WELCOME INTRO VIDEO EXPERIENCE (Responsive Desktop & Mobile)
   // Assets: Desktop (welcome-video-desktop.mp4), Mobile (welcome-video-mobile.mp4)
+  // Plays on every page load & refresh with sound enabled
   // ==========================================================================
   const welcomeIntro = document.getElementById('welcomeIntro');
   const introVideo = document.getElementById('introVideo');
-  const skipIntroBtn = document.getElementById('skipIntroBtn');
-  const introAudioToggle = document.getElementById('introAudioToggle');
   const introProgressFill = document.getElementById('introProgressFill');
-  const footerReplayBtn = document.getElementById('footerReplayBtn');
 
   let isIntroActive = true;
   let introFallbackTimer = null;
@@ -290,34 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
         welcomeIntro.classList.add('intro-hidden');
       }, 1100);
     }
-
-    try {
-      sessionStorage.setItem('kusalava_intro_watched', 'true');
-    } catch (e) {}
-  }
-
-  function updateAudioButtonUI(isUnmuted) {
-    if (!introAudioToggle) return;
-    if (isUnmuted) {
-      introAudioToggle.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-      `;
-      introAudioToggle.setAttribute('title', 'Mute Sound');
-      introAudioToggle.setAttribute('aria-label', 'Mute Sound');
-    } else {
-      introAudioToggle.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <line x1="23" y1="9" x2="17" y2="15"></line>
-          <line x1="17" y1="9" x2="23" y2="15"></line>
-        </svg>
-      `;
-      introAudioToggle.setAttribute('title', 'Unmute Sound');
-      introAudioToggle.setAttribute('aria-label', 'Unmute Sound');
-    }
   }
 
   function startWelcomeExperience() {
@@ -329,18 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 2. Session check: Do not replay repeatedly once visitor enters homepage
-    const hasSeenIntro = sessionStorage.getItem('kusalava_intro_watched');
-    if (hasSeenIntro === 'true') {
-      welcomeIntro.classList.add('intro-hidden');
-      isIntroActive = false;
-      return;
-    }
-
     isIntroActive = true;
     welcomeIntro.classList.remove('intro-hidden', 'closing');
 
-    // 3. Selective Single-Asset Loading (Loads ONLY mobile OR desktop video)
+    // 2. Selective Single-Asset Loading (Loads ONLY mobile OR desktop video)
     const targetSrc = getAppropriateVideoSrc();
     const currentSrc = introVideo.getAttribute('src') || '';
     if (!currentSrc.includes(targetSrc)) {
@@ -349,29 +311,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     introVideo.currentTime = 0;
-    introVideo.muted = true;
+    introVideo.muted = false;
+    introVideo.volume = 1.0;
     introVideo.playsInline = true;
-    updateAudioButtonUI(false);
 
     if (introProgressFill) {
       introProgressFill.style.width = '0%';
     }
 
-    // 4. Autoplay with Graceful Promise Handling
+    // 3. Autoplay with Audio (graceful fallback if browser requires user gesture)
     const playPromise = introVideo.play();
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
-        console.warn('Autoplay prevented or deferred by browser policy:', err);
-        // Retry muted playback immediately
+        console.warn('Autoplay with audio deferred by browser security policy. Starting muted with instant unmute on gesture:', err);
         introVideo.muted = true;
         introVideo.play().catch(() => {
-          // If strictly blocked, fallback gently to homepage
-          closeWelcomeIntro();
+          closeWelcomeIntro(false);
         });
+
+        // Unmute automatically on the first user interaction (touch or click anywhere)
+        const unmuteOnInteraction = () => {
+          try {
+            introVideo.muted = false;
+            introVideo.volume = 1.0;
+          } catch (e) {}
+          ['click', 'touchstart', 'keydown'].forEach(evt => window.removeEventListener(evt, unmuteOnInteraction));
+        };
+        ['click', 'touchstart', 'keydown'].forEach(evt => window.addEventListener(evt, unmuteOnInteraction, { once: true }));
       });
     }
 
-    // 5. Video Progress Bar Update
+    // 4. Video Progress Bar Update
     introVideo.ontimeupdate = () => {
       if (introVideo.duration && introProgressFill) {
         const pct = (introVideo.currentTime / introVideo.duration) * 100;
@@ -379,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // 6. Video Completion Transition: Play full 10 seconds, then hold completed logo on screen for 1 second before revealing website
+    // 5. Video Completion Transition: Play full video, then hold completed logo for 1 second before revealing site
     introVideo.onended = () => {
       if (introProgressFill) introProgressFill.style.width = '100%';
       setTimeout(() => {
@@ -387,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     };
 
-    // 7. Watchdog Timer 1: Fallback only if video is completely blocked or stalled for 8 seconds without starting
+    // 6. Watchdog Timer 1: Fallback only if video is completely blocked or stalled for 8 seconds without starting
     introFallbackTimer = setTimeout(() => {
       if (isIntroActive && (introVideo.paused || introVideo.currentTime === 0)) {
         console.warn('Video stalled or failed to start playback. Smoothly revealing website...');
@@ -395,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 8000);
 
-    // 8. Watchdog Timer 2: Absolute safety cap (20 seconds) scheduled ONLY AFTER playback actually begins
+    // 7. Watchdog Timer 2: Absolute safety cap (20 seconds) scheduled ONLY AFTER playback actually begins
     introVideo.onplaying = () => {
       if (introFallbackTimer) clearTimeout(introFallbackTimer);
       if (introMaxDurationTimer) clearTimeout(introMaxDurationTimer);
@@ -405,29 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 20000);
     };
-  }
-
-  // Audio Toggle Button
-  if (introAudioToggle && introVideo) {
-    introAudioToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      introVideo.muted = !introVideo.muted;
-      updateAudioButtonUI(!introVideo.muted);
-    });
-  }
-
-  // Skip Intro Button (Click & Keyboard Enter/Space)
-  if (skipIntroBtn) {
-    skipIntroBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeWelcomeIntro(false);
-    });
-    skipIntroBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        closeWelcomeIntro(false);
-      }
-    });
   }
 
   // Handle Dynamic Device Orientation or Window Resize (Preserves Video State)
@@ -448,16 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 250);
   });
 
-  // Footer Replay Intro Button
-  if (footerReplayBtn) {
-    footerReplayBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('kusalava_intro_watched');
-      startWelcomeExperience();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
-  // Trigger Welcome Experience on Page Load
+  // Trigger Welcome Experience on Page Load / Refresh
   startWelcomeExperience();
 
   // ==========================================================================
@@ -508,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mobileDrawer || !drawerBackdrop) return;
     mobileDrawer.classList.add('open');
     drawerBackdrop.classList.add('active');
-    menuToggle.setAttribute('aria-expanded', 'true');
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'true');
     mobileDrawer.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
@@ -517,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mobileDrawer || !drawerBackdrop) return;
     mobileDrawer.classList.remove('open');
     drawerBackdrop.classList.remove('active');
-    menuToggle.setAttribute('aria-expanded', 'false');
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
     mobileDrawer.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }

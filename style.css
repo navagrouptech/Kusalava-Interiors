@@ -633,16 +633,10 @@ button {
   transform: translateY(-2px);
 }
 
-/* Hamburger Toggle */
-.menu-toggle {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
-  padding: 0;
-  background: none;
-  border: none;
+/* Hamburger Toggle (Removed for seamless scroll navigation) */
+.menu-toggle,
+.mobile-menu-toggle {
+  display: none !important;
 }
 
 @media (min-width: 1024px) {
@@ -946,6 +940,57 @@ button {
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0 4rem 0;
+  }
+
+  .hero-headline {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-supporting {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta-group {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.75rem;
+    width: 100%;
+  }
+
+  .hero-stats-ribbon {
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.5rem;
+    width: 100%;
+    padding-top: 2rem;
+  }
+
+  .stat-item {
+    align-items: center;
+    text-align: center;
+  }
 }
 
 /* ==========================================================================
