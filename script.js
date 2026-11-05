@@ -1,7 +1,7 @@
 /* ==========================================================================
-   KUSALAVA INTERIORS — LUXURY EDITORIAL CONTROLLER & LOGIC
+   KUSALAVA INTERIORS - LUXURY EDITORIAL CONTROLLER & LOGIC
    Brand: KUSALAVA INTERIORS | DESIGN • BUILD • DECOR
-   Contacts: Pavan Kumar (9949287105) | Surya (9390405028)
+   Contacts: Pavan Kumar (7287891945) | Surya (9182784945)
    Stack: Vanilla HTML5, CSS3, ES6 JavaScript (Firebase Ready)
    ========================================================================== */
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: 'Carcass Material', value: 'BWR / BWP Grade 710 Marine Ply' },
         { label: 'Hardware & Hinges', value: 'Blum / Hettich Soft-Close' },
         { label: 'Exterior Finishes', value: 'Veneer, Matte Acrylic & Fluted Panels' },
-        { label: 'Turnaround Time', value: '14 – 21 Working Days' }
+        { label: 'Turnaround Time', value: '14 - 21 Working Days' }
       ]
     },
     ceiling: {
@@ -103,17 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     plumbing: {
       id: 'plumbing',
-      title: 'Luxury Plumbing & Sanitary Systems',
+      title: 'Home Automation & Smart Works',
       category: 'mep',
-      categoryLabel: 'Concealed Sanitary & Drainage',
+      categoryLabel: 'Smart Living & Automation',
       image: 'assets/service-plumbing.jpg',
-      shortDesc: 'High-end sanitary installations, concealed thermostatic diverters, floating vanity plumbing, rain shower heads, and pressure-tested CPVC pipe networks.',
-      longDesc: 'Modern bathrooms demand silent drainage and dependable hydraulic pressure. We install concealed thermostatic diverter bodies (Grohe, Kohler, Jaquar Artize), wall-hung concealed cistern frames (Geberit), anti-cockroach floor drain traps, and zero-leakage solvent-welded CPVC piping.',
+      shortDesc: 'Intelligent scene lighting, automated motorized curtains, smart security access, sensor-driven climate integration, and seamless IoT control for modern luxury residences.',
+      longDesc: 'Elevate your residence with integrated smart living architecture. From mood-adaptive smart lighting scenes and motorized acoustic curtain tracks to biometric entry systems, touch-glass switch panels, and voice-controlled smart home automation hubs tailored for villas, penthouses, and luxury residences.',
       specs: [
-        { label: 'Piping Grade', value: 'Ashirvad FlowGuard Plus CPVC' },
-        { label: 'Fittings & Diverters', value: 'Grohe / Kohler / Jaquar Artize' },
-        { label: 'Drainage Acoustic', value: 'Multi-Layer Sound-Dampened SWR' },
-        { label: 'Testing Method', value: 'Hydraulic Pressure Tested at 10 Bar' }
+        { label: 'Protocols Supported', value: 'Zigbee 3.0, Matter, Wi-Fi 6, KNX' },
+        { label: 'Lighting Control', value: '0-10V Dimmable & CCT Tunable LED Drivers' },
+        { label: 'Motorized Fenestration', value: 'Whisper-Quiet Somfy / Tuya Track Systems' },
+        { label: 'Security & Access', value: 'Biometric Smart Mortise Locks & IP Video Intercoms' }
       ]
     },
     upvc: {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 1. CINEMATIC WELCOME INTRO VIDEO EXPERIENCE (Responsive Desktop & Mobile)
-  // Assets: Desktop (1000333980_gwr_video_mvp.mp4), Mobile (1000333996_gwr_video_mvp.mp4)
+  // Assets: Desktop (welcome-video-desktop.mp4), Mobile (welcome-video-mobile.mp4)
   // ==========================================================================
   const welcomeIntro = document.getElementById('welcomeIntro');
   const introVideo = document.getElementById('introVideo');
@@ -263,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function getAppropriateVideoSrc() {
     const isMobilePortrait = window.matchMedia('(max-width: 768px), (orientation: portrait) and (max-width: 820px)').matches;
     return isMobilePortrait
-      ? 'assets/1000333996_gwr_video_mvp.mp4'
-      : 'assets/1000333980_gwr_video_mvp.mp4';
+      ? 'assets/welcome-video-mobile.mp4'
+      : 'assets/welcome-video-desktop.mp4';
   }
 
   function closeWelcomeIntro(immediate = false) {
@@ -379,29 +379,32 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // 6. Video Completion Transition (Cinematic Fade After 10s Reveal)
+    // 6. Video Completion Transition: Play full 10 seconds, then hold completed logo on screen for 1 second before revealing website
     introVideo.onended = () => {
-      closeWelcomeIntro(false);
+      if (introProgressFill) introProgressFill.style.width = '100%';
+      setTimeout(() => {
+        closeWelcomeIntro(false);
+      }, 1000);
     };
 
-    // 7. Watchdog Timer 1: If video stalls or fails to buffer within 3.5s, don't trap visitor
+    // 7. Watchdog Timer 1: Fallback only if video is completely blocked or stalled for 8 seconds without starting
     introFallbackTimer = setTimeout(() => {
       if (isIntroActive && (introVideo.paused || introVideo.currentTime === 0)) {
         console.warn('Video stalled or failed to start playback. Smoothly revealing website...');
         closeWelcomeIntro(false);
       }
-    }, 3800);
+    }, 8000);
 
+    // 8. Watchdog Timer 2: Absolute safety cap (20 seconds) scheduled ONLY AFTER playback actually begins
     introVideo.onplaying = () => {
       if (introFallbackTimer) clearTimeout(introFallbackTimer);
+      if (introMaxDurationTimer) clearTimeout(introMaxDurationTimer);
+      introMaxDurationTimer = setTimeout(() => {
+        if (isIntroActive) {
+          closeWelcomeIntro(false);
+        }
+      }, 20000);
     };
-
-    // 8. Watchdog Timer 2: Absolute safety cap of 11.5 seconds (videos are 10s)
-    introMaxDurationTimer = setTimeout(() => {
-      if (isIntroActive) {
-        closeWelcomeIntro(false);
-      }
-    }, 11500);
   }
 
   // Audio Toggle Button
@@ -657,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
 
     const waMsg = encodeURIComponent(`Hello Kusalava Interiors, I would like to inquire about your ${data.title} service.`);
-    modalServiceWaBtn.href = `https://wa.me/919949287105?text=${waMsg}`;
+    modalServiceWaBtn.href = `https://wa.me/917287891945?text=${waMsg}`;
 
     modalServiceInquireBtn.onclick = () => {
       closeServiceModal();
@@ -750,7 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     const waMsg = encodeURIComponent(`Hello Kusalava Interiors, I was viewing "${proj.title}" on your website and would like to build a similar interior.`);
-    modalProjectWaBtn.href = `https://wa.me/919949287105?text=${waMsg}`;
+    modalProjectWaBtn.href = `https://wa.me/917287891945?text=${waMsg}`;
 
     modalProjectInquireBtn.onclick = () => {
       closeProjectModal();
@@ -828,7 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toLakhs = (amt) => (amt / 100000).toFixed(2);
 
     if (estPriceDisplay) {
-      estPriceDisplay.textContent = `₹ ${toLakhs(totalMin)} – ${toLakhs(totalMax)} Lakhs*`;
+      estPriceDisplay.textContent = `₹ ${toLakhs(totalMin)} - ${toLakhs(totalMax)} Lakhs*`;
     }
 
     if (estSelectionSummary) {
@@ -842,40 +845,71 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  propPills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      propPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      currentBaseRate = parseInt(pill.getAttribute('data-rate') || '350000', 10);
-      currentPropertyLabel = pill.getAttribute('data-label') || '2 BHK Apartment';
-      calculateEstimate();
+  if (propPills && propPills.length > 0) {
+    propPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        propPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentBaseRate = parseInt(pill.getAttribute('data-rate') || '350000', 10);
+        currentPropertyLabel = pill.getAttribute('data-label') || '2 BHK Apartment';
+        calculateEstimate();
+      });
     });
-  });
 
-  serviceCheckboxes.forEach(chk => {
-    chk.addEventListener('change', calculateEstimate);
-  });
+    serviceCheckboxes.forEach(chk => {
+      chk.addEventListener('change', calculateEstimate);
+    });
 
-  // Initialize calculation
-  calculateEstimate();
+    calculateEstimate();
+  }
 
   if (sendEstimateBtn) {
     sendEstimateBtn.addEventListener('click', () => {
       const est = calculateEstimate();
       const message = `Hello Kusalava Interiors,\n\nI calculated a project investment estimate on your website:\n\n• Configuration: ${est.property}\n• Crafts Selected: ${est.crafts.join(', ')}\n• Estimated Range: ${est.estimateRange}\n\nPlease let me know when Pavan Kumar or Surya can schedule an on-site evaluation.`;
-      const pavanPhone = '919949287105';
+      const pavanPhone = '917287891945';
       window.open(`https://wa.me/${pavanPhone}?text=${encodeURIComponent(message)}`, '_blank');
     });
   }
 
   // ==========================================================================
-  // 9. CONTACT FORM WHATSAPP DISPATCH
+  // 9. CONTACT FORM DISPATCH (EmailJS + WhatsApp Lead Integration)
   // ==========================================================================
   const contactForm = document.getElementById('contactForm');
   const formStatusMsg = document.getElementById('formStatusMsg');
 
+  // EmailJS Configuration
+  const EMAILJS_SERVICE_ID = 'service_yfhu67s';
+  const EMAILJS_TEMPLATE_ID = 'template_8ap4yhi';
+  const EMAILJS_PUBLIC_KEY = 'fc1711pKAFGrtgxTc';
+
+  async function sendConsultationEmail(templateParams) {
+    // 1. Try via official browser SDK if loaded
+    if (window.emailjs && typeof window.emailjs.send === 'function') {
+      return window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
+    }
+    // 2. Direct HTTPS REST API fallback (guarantees delivery even if CDN is blocked)
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        template_params: templateParams
+      })
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || 'Email delivery failed');
+    }
+    return res;
+  }
+
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const firstName = (document.getElementById('formFirstName')?.value || '').trim();
@@ -894,20 +928,66 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const waText = `Hello Kusalava Interiors,\n\nI would like to schedule a private consultation:\n\n• Client Name: ${firstName} ${lastName}\n• Phone Number: ${phone}\n• Email: ${email || 'Not specified'}\n• Primary Craft: ${service}\n• Site Location: ${location || 'Hyderabad / AP'}\n• Project Details: ${message || 'Turnkey interior design discussion'}`;
-
-      const leadPhone = '919949287105'; // Pavan Kumar
-      window.open(`https://wa.me/${leadPhone}?text=${encodeURIComponent(waText)}`, '_blank');
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalBtnHTML = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        const btnSpan = submitBtn.querySelector('span');
+        if (btnSpan) btnSpan.textContent = 'Sending Message...';
+      }
 
       if (formStatusMsg) {
-        formStatusMsg.textContent = 'Opening WhatsApp with your consultation details... Pavan Kumar & Surya will respond shortly.';
+        formStatusMsg.textContent = 'Sending your consultation details to our studio...';
         formStatusMsg.style.color = '#c5a059';
       }
 
-      contactForm.reset();
-      setTimeout(() => {
-        if (formStatusMsg) formStatusMsg.textContent = '';
-      }, 7000);
+      // Map exactly to EmailJS template variables
+      const templateParams = {
+        first_name: firstName,
+        last_name: lastName || '',
+        phone_number: phone,
+        email_address: email || 'Not provided',
+        primary_craft: service,
+        project_location: location || 'Hyderabad / Andhra Pradesh',
+        project_requirements: message || 'Turnkey interior design inquiry',
+        // Helpful alias keys for template resilience
+        client_name: `${firstName} ${lastName}`.trim(),
+        phone: phone,
+        email: email || 'Not provided',
+        reply_to: email || 'Kusalavainteriors@gmail.com',
+        service: service,
+        location: location || 'Hyderabad / Andhra Pradesh',
+        message: message || 'Turnkey interior design inquiry'
+      };
+
+      try {
+        await sendConsultationEmail(templateParams);
+
+        if (formStatusMsg) {
+          formStatusMsg.textContent = '✓ Message sent successfully! Redirecting...';
+          formStatusMsg.style.color = '#c5a059';
+        }
+
+        contactForm.reset();
+
+        // Redirect to dedicated Thank You confirmation page
+        setTimeout(() => {
+          window.location.href = '/thank-you/';
+        }, 800);
+
+      } catch (err) {
+        console.error('EmailJS delivery error:', err);
+
+        if (formStatusMsg) {
+          formStatusMsg.textContent = 'Message could not be sent. Please call our team directly at +91 72878 91945 or +91 91827 84945.';
+          formStatusMsg.style.color = '#e74c3c';
+        }
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHTML;
+        }
+      }
     });
   }
 
@@ -920,3 +1000,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+
+  // ==========================================================================
+  // HERO SECTION BACKGROUND VIDEO (Desktop & Mobile Responsive Loop)
+  // ==========================================================================
+  const heroBgVideo = document.getElementById('heroBgVideo');
+  if (heroBgVideo) {
+    function setupHeroBgVideo() {
+      const isMobile = window.matchMedia('(max-width: 768px), (orientation: portrait) and (max-width: 820px)').matches;
+      const targetSrc = isMobile ? 'assets/Home-video-mobile.mp4' : 'assets/Home-video-desktop.mp4';
+      const currentSrc = heroBgVideo.getAttribute('src') || '';
+      if (!currentSrc.includes(targetSrc)) {
+        heroBgVideo.src = targetSrc;
+        heroBgVideo.load();
+      }
+      heroBgVideo.muted = true;
+      heroBgVideo.playsInline = true;
+      heroBgVideo.loop = true;
+      heroBgVideo.play().catch(() => {});
+    }
+    setupHeroBgVideo();
+
+    let heroResizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(heroResizeTimer);
+      heroResizeTimer = setTimeout(setupHeroBgVideo, 300);
+    });
+  }
