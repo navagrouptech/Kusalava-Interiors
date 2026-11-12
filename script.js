@@ -804,6 +804,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sendEstimateBtn) {
     sendEstimateBtn.addEventListener('click', () => {
       const est = calculateEstimate();
+      trackEvent('cost_estimator_complete', {
+        property_configuration: est.property,
+        estimated_range: est.estimateRange,
+        selected_crafts_count: est.crafts.length
+      });
       const message = `Hello Kusalava Interiors,\n\nI calculated a project investment estimate on your website:\n\n• Configuration: ${est.property}\n• Crafts Selected: ${est.crafts.join(', ')}\n• Estimated Range: ${est.estimateRange}\n\nPlease let me know when Pavan Kumar or Surya can schedule an on-site evaluation.`;
       const pavanPhone = '917287891945';
       window.open(`https://wa.me/${pavanPhone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -906,6 +911,12 @@ document.addEventListener('DOMContentLoaded', () => {
           formStatusMsg.style.color = '#c5a059';
         }
 
+        trackEvent('consultation_form_submit', {
+          service_selected: service || 'All Crafts',
+          location: location || 'Not specified',
+          page_path: window.location.pathname
+        });
+
         contactForm.reset();
 
         // Redirect to dedicated Thank You confirmation page
@@ -928,6 +939,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ==========================================================================
+  // GA4 CONVERSION EVENT TRACKING DISPATCHER
+  // ==========================================================================
+  function trackEvent(eventName, params = {}) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+    }
+    window.dispatchEvent(new CustomEvent('kusalava_analytics', { detail: { event: eventName, params } }));
+  }
+
+  // Global Click Tracking for WhatsApp, Phone, and Email links
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href') || '';
+    if (href.includes('wa.me') || href.includes('whatsapp.com')) {
+      trackEvent('whatsapp_click', { link_url: href, page_path: window.location.pathname });
+    } else if (href.startsWith('tel:')) {
+      trackEvent('phone_click', { phone_number: href.replace('tel:', ''), page_path: window.location.pathname });
+    } else if (href.startsWith('mailto:')) {
+      trackEvent('email_click', { email: href.replace('mailto:', ''), page_path: window.location.pathname });
+    }
+  });
 
   // ==========================================================================
   // 10. CURRENT YEAR IN FOOTER

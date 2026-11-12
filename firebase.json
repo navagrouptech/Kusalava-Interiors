@@ -13,6 +13,18 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "redirects": [
+      {
+        "source": "/services/plumbing-works",
+        "destination": "/services/home-automation/",
+        "type": 301
+      },
+      {
+        "source": "/services/plumbing-works/**",
+        "destination": "/services/home-automation/",
+        "type": 301
+      }
+    ],
     "headers": [
       {
         "source": "sitemap.xml",
