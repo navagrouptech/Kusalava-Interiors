@@ -900,6 +900,8 @@ document.addEventListener('DOMContentLoaded', () => {
         reply_to: email || 'Kusalavainteriors@gmail.com',
         service: service,
         location: location || 'Hyderabad / Andhra Pradesh',
+        source_location_page: window.location.pathname,
+        source_url: window.location.href,
         message: message || 'Turnkey interior design inquiry'
       };
 
@@ -914,6 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         trackEvent('consultation_form_submit', {
           service_selected: service || 'All Crafts',
           location: location || 'Not specified',
+          source_location_page: window.location.pathname,
           page_path: window.location.pathname
         });
 
@@ -956,11 +959,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!link) return;
     const href = link.getAttribute('href') || '';
     if (href.includes('wa.me') || href.includes('whatsapp.com')) {
-      trackEvent('whatsapp_click', { link_url: href, page_path: window.location.pathname });
+      trackEvent('whatsapp_click', { link_url: href, page_path: window.location.pathname, source_location: window.location.pathname });
     } else if (href.startsWith('tel:')) {
-      trackEvent('phone_click', { phone_number: href.replace('tel:', ''), page_path: window.location.pathname });
+      trackEvent('phone_click', { phone_number: href.replace('tel:', ''), page_path: window.location.pathname, source_location: window.location.pathname });
     } else if (href.startsWith('mailto:')) {
-      trackEvent('email_click', { email: href.replace('mailto:', ''), page_path: window.location.pathname });
+      trackEvent('email_click', { email: href.replace('mailto:', ''), page_path: window.location.pathname, source_location: window.location.pathname });
     }
   });
 
