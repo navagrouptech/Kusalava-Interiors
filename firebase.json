@@ -27,6 +27,19 @@
     ],
     "headers": [
       {
+        "source": "openai-business-profile.txt",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain; charset=utf-8"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      },
+      {
         "source": "sitemap.xml",
         "headers": [
           {
