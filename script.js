@@ -174,13 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
       welcomeIntro.classList.add('intro-hidden');
       try {
         if (introVideo) introVideo.pause();
-      } catch (e) {}
+      } catch (e) { }
     } else {
       welcomeIntro.classList.add('closing');
       setTimeout(() => {
         try {
           if (introVideo) introVideo.pause();
-        } catch (e) {}
+        } catch (e) { }
         welcomeIntro.classList.add('intro-hidden');
       }, 1100);
     }
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
           try {
             introVideo.muted = false;
             introVideo.volume = 1.0;
-          } catch (e) {}
+          } catch (e) { }
           ['click', 'touchstart', 'keydown'].forEach(evt => window.removeEventListener(evt, unmuteOnInteraction));
         };
         ['click', 'touchstart', 'keydown'].forEach(evt => window.addEventListener(evt, unmuteOnInteraction, { once: true }));
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         introVideo.src = correctSrc;
         introVideo.load();
         introVideo.currentTime = currentTime;
-        introVideo.play().catch(() => {});
+        introVideo.play().catch(() => { });
       }
     }, 250);
   });
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (formServiceSelect) {
         for (let i = 0; i < formServiceSelect.options.length; i++) {
           if (formServiceSelect.options[i].text.toLowerCase().includes(data.title.toLowerCase()) ||
-              formServiceSelect.options[i].value.toLowerCase().includes(data.title.toLowerCase())) {
+            formServiceSelect.options[i].value.toLowerCase().includes(data.title.toLowerCase())) {
             formServiceSelect.selectedIndex = i;
             break;
           }
@@ -949,32 +949,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initScrollReveal();
 
+  // ==========================================================================
+  // 12. HERO HEADLINE LEFT-TO-RIGHT KINETIC SCROLL PARALLAX
+  // Moves "YOUR DREAM SPACE, OUR MASTERPIECE" horizontally when scrolling down
+  // and smoothly glides back into place when scrolling top
+  // ==========================================================================
+  const heroLine1 = document.querySelector('.hero-line-1');
+  const heroLine2 = document.querySelector('.hero-line-2');
+  const heroSupportingText = document.querySelector('.hero-supporting');
+
+  let heroParallaxTicking = false;
+
+  function updateHeroParallax() {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const heroSection = document.getElementById('home');
+    const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
+
+    if (scrollY <= heroHeight + 50) {
+      const progress = scrollY / heroHeight;
+      const isMobile = window.innerWidth < 768;
+
+      // Line 1 moves from left to right as you scroll down
+      const maxShift1 = isMobile ? 32 : 70;
+      const shift1 = progress * maxShift1;
+
+      // Line 2 glides with dynamic offset from left to right
+      const maxShift2 = isMobile ? 48 : 110;
+      const shift2 = progress * maxShift2;
+
+      // Supporting paragraph subtle drift
+      const maxShiftSupp = isMobile ? 20 : 40;
+      const shiftSupp = progress * maxShiftSupp;
+
+      if (heroLine1) {
+        heroLine1.style.transform = `translate3d(${shift1}px, 0, 0)`;
+      }
+      if (heroLine2) {
+        heroLine2.style.transform = `translate3d(${shift2}px, 0, 0)`;
+      }
+      if (heroSupportingText) {
+        heroSupportingText.style.transform = `translate3d(${shiftSupp}px, 0, 0)`;
+      }
+    }
+    heroParallaxTicking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!heroParallaxTicking) {
+      window.requestAnimationFrame(updateHeroParallax);
+      heroParallaxTicking = true;
+    }
+  }, { passive: true });
+
 });
 
 
-  // ==========================================================================
-  // HERO SECTION BACKGROUND VIDEO (Desktop & Mobile Responsive Loop)
-  // ==========================================================================
-  const heroBgVideo = document.getElementById('heroBgVideo');
-  if (heroBgVideo) {
-    function setupHeroBgVideo() {
-      const isMobile = window.matchMedia('(max-width: 768px), (orientation: portrait) and (max-width: 820px)').matches;
-      const targetSrc = isMobile ? 'assets/Home-video-mobile.mp4' : 'assets/Home-video-desktop.mp4';
-      const currentSrc = heroBgVideo.getAttribute('src') || '';
-      if (!currentSrc.includes(targetSrc)) {
-        heroBgVideo.src = targetSrc;
-        heroBgVideo.load();
-      }
-      heroBgVideo.muted = true;
-      heroBgVideo.playsInline = true;
-      heroBgVideo.loop = true;
-      heroBgVideo.play().catch(() => {});
+// ==========================================================================
+// HERO SECTION BACKGROUND VIDEO (Desktop & Mobile Responsive Loop)
+// ==========================================================================
+const heroBgVideo = document.getElementById('heroBgVideo');
+if (heroBgVideo) {
+  function setupHeroBgVideo() {
+    const isMobile = window.matchMedia('(max-width: 768px), (orientation: portrait) and (max-width: 820px)').matches;
+    const targetSrc = isMobile ? 'assets/Home-video-mobile.mp4' : 'assets/Home-video-desktop.mp4';
+    const currentSrc = heroBgVideo.getAttribute('src') || '';
+    if (!currentSrc.includes(targetSrc)) {
+      heroBgVideo.src = targetSrc;
+      heroBgVideo.load();
     }
-    setupHeroBgVideo();
-
-    let heroResizeTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(heroResizeTimer);
-      heroResizeTimer = setTimeout(setupHeroBgVideo, 300);
-    });
+    heroBgVideo.muted = true;
+    heroBgVideo.playsInline = true;
+    heroBgVideo.loop = true;
+    heroBgVideo.play().catch(() => { });
   }
+  setupHeroBgVideo();
+
+  let heroResizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(heroResizeTimer);
+    heroResizeTimer = setTimeout(setupHeroBgVideo, 300);
+  });
+}

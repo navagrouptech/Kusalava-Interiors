@@ -3293,32 +3293,70 @@ button {
 .stagger-7 { transition-delay: 0.56s; }
 .stagger-8 { transition-delay: 0.64s; }
 
-/* Special Hero headline entrance animation */
-.hero-content .hero-headline {
+/* ==========================================================================
+   HERO HEADLINE LEFT-TO-RIGHT KINETIC ANIMATIONS & ENTRANCE
+   ========================================================================== */
+.hero-line {
+  display: inline-block;
+  will-change: transform, opacity;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-content .hero-line-1 {
   opacity: 0;
-  transform: translateX(-40px);
-  animation: heroTextSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
+  transform: translateX(-50px);
+  animation: heroLine1SlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+
+.hero-content .hero-line-2 {
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: heroLine2SlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.38s;
 }
 
 .hero-content .hero-supporting {
   opacity: 0;
   transform: translateX(-40px);
-  animation: heroTextSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.45s;
+  will-change: transform, opacity;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: heroSupportingSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.55s;
 }
 
 .hero-content .hero-cta-centered {
   opacity: 0;
-  transform: translateX(-40px);
-  animation: heroTextSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.65s;
+  transform: translateX(-35px);
+  animation: heroItemSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.72s;
 }
 
 .hero-content .hero-stats-centered {
   opacity: 0;
-  transform: translateX(-40px);
-  animation: heroTextSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.85s;
+  transform: translateX(-35px);
+  animation: heroItemSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s;
 }
 
-@keyframes heroTextSlideIn {
+@keyframes heroLine1SlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroLine2SlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroSupportingSlideIn {
   from {
     opacity: 0;
     transform: translateX(-40px);
@@ -3329,83 +3367,13 @@ button {
   }
 }
 
-/* ==========================================================================
-   EDITORIAL LUXURY MARQUEE RIBBON (Continuous Left-to-Right Moving Typography)
-   ========================================================================== */
-.luxury-marquee-ribbon {
-  background: var(--bg-dark);
-  color: var(--gold-light);
-  border-top: 1px solid rgba(200, 155, 60, 0.22);
-  border-bottom: 1px solid rgba(200, 155, 60, 0.22);
-  padding: 1.15rem 0;
-  overflow: hidden;
-  user-select: none;
-  white-space: nowrap;
-  position: relative;
-  z-index: 10;
-}
-
-.luxury-marquee-ribbon::before,
-.luxury-marquee-ribbon::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 90px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.luxury-marquee-ribbon::before {
-  left: 0;
-  background: linear-gradient(90deg, var(--bg-dark) 0%, transparent 100%);
-}
-
-.luxury-marquee-ribbon::after {
-  right: 0;
-  background: linear-gradient(270deg, var(--bg-dark) 0%, transparent 100%);
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marqueeSlideToRight 32s linear infinite;
-}
-
-.luxury-marquee-ribbon:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-.marquee-group {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.marquee-group span {
-  font-family: var(--font-editorial);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-light);
-  padding: 0 1.25rem;
-  display: inline-flex;
-  align-items: center;
-}
-
-.marquee-group .marquee-bullet {
-  color: var(--gold-primary);
-  font-size: 0.65rem;
-  padding: 0 0.5rem;
-  opacity: 0.7;
-}
-
-@keyframes marqueeSlideToRight {
-  0% {
-    transform: translateX(-50%);
+@keyframes heroItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
   }
-  100% {
+  to {
+    opacity: 1;
     transform: translateX(0);
   }
 }
@@ -3416,15 +3384,13 @@ button {
     transform: none !important;
     transition: none !important;
   }
-  .hero-content .hero-headline,
+  .hero-content .hero-line-1,
+  .hero-content .hero-line-2,
   .hero-content .hero-supporting,
   .hero-content .hero-cta-centered,
   .hero-content .hero-stats-centered {
     opacity: 1 !important;
     transform: none !important;
-    animation: none !important;
-  }
-  .marquee-track {
     animation: none !important;
   }
 }
