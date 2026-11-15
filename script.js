@@ -134,114 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ==========================================================================
-  // DATA MODEL: PROJECTS (Prepared for Future Database / Admin Dashboard)
+  // DATA MODEL: PROJECTS (Awaiting New Real Client Projects From Leadership)
+  // To add new projects, populate this array with { id, title, category, categoryLabel, image, craftTags, location, scope, duration, materials, desc }
   // ==========================================================================
-  const PROJECTS_DATA = [
-    {
-      id: 'proj-1',
-      title: 'The Ivory Contemporary Suite',
-      category: 'living',
-      categoryLabel: 'Living Rooms',
-      image: 'assets/hero-living.jpg',
-      craftTags: ['Fluted Oak Paneling', 'Warm Cove Troughs', 'Marble TV Unit'],
-      location: 'Financial District, Hyderabad',
-      scope: 'Complete Living Room Turnkey Architecture',
-      duration: '45 Days',
-      materials: 'Natural Oak Wood, Statuario Marble, 3000K LED Cove',
-      desc: 'A serene contemporary living environment characterized by vertical fluted oak paneling, integrated warm amber cove lighting, custom floating credenza, and minimal architectural furniture tailored for quiet family luxury.'
-    },
-    {
-      id: 'proj-2',
-      title: 'The Grand Penthouse Sanctuary',
-      category: 'living',
-      categoryLabel: 'Living Rooms',
-      image: 'assets/project-living-grand.jpg',
-      craftTags: ['Double-Height Wall', 'Bookmatched Marble', 'Brass Accents'],
-      location: 'Jubilee Hills, Hyderabad',
-      scope: 'Penthouse Main Salon & Media Lounge',
-      duration: '60 Days',
-      materials: 'Italian Calacatta Marble, Champagne Brass, Linen Velvet',
-      desc: 'An opulent double-height penthouse salon featuring seamless full-slab bookmatched marble fireplace wall, acoustic ceiling baffle details, custom brass chandeliers, and floor-to-ceiling panoramic sliding doors.'
-    },
-    {
-      id: 'proj-3',
-      title: 'Contemporary Master Retreat',
-      category: 'bedrooms',
-      categoryLabel: 'Bedrooms',
-      image: 'assets/project-bedroom.jpg',
-      craftTags: ['Cushioned Headboard', 'Hidden LEDs', 'Acoustic Wood Slats'],
-      location: 'Gachibowli, Hyderabad',
-      scope: 'Master Bedroom & Private Dressing Space',
-      duration: '35 Days',
-      materials: 'Italian Suede, Walnut Slats, Dimmable Warm Lighting',
-      desc: 'An intimate master bedroom sanctuary prioritizing soothing tactile materiality, acoustic sound absorption, bespoke bedside cantilever shelves, and customized floating bed base with concealed perimeter night glow.'
-    },
-    {
-      id: 'proj-4',
-      title: 'The Olive & Marble Chef’s Kitchen',
-      category: 'kitchens',
-      categoryLabel: 'Modular Kitchens',
-      image: 'assets/project-kitchen.jpg',
-      craftTags: ['Matte Olive Acrylic', 'Quartz Waterfall', 'Blum Servo-Drive'],
-      location: 'Kokapet, Hyderabad',
-      scope: 'Open-Concept Modular Kitchen & Island',
-      duration: '30 Days',
-      materials: 'Marine Ply 710, Calacatta Quartz, Blum Hardware',
-      desc: 'A bespoke chef-grade culinary space pairing matte olive anti-fingerprint acrylic cabinetry with a dramatic white quartz waterfall island, concealed pantry pull-outs, and under-cabinet illumination.'
-    },
-    {
-      id: 'proj-5',
-      title: 'Bespoke Walk-In Dressing Suite',
-      category: 'cupboards',
-      categoryLabel: 'Cupboards',
-      image: 'assets/service-wardrobe.jpg',
-      craftTags: ['Tinted Glass Shutters', 'Fluted Drawers', 'Profile Lighting'],
-      location: 'Banjara Hills, Hyderabad',
-      scope: 'Walk-In Wardrobe & Vanity Unit',
-      duration: '25 Days',
-      materials: 'BWP Marine Ply, Smoked Bronze Glass, Champagne Trim',
-      desc: 'A boutique luxury wardrobe suite engineered with illuminated aluminum-framed tinted glass shutters, customized watch and jewelry velvet organizers, and automated sensor-driven LED wardrobe rail.'
-    },
-    {
-      id: 'proj-6',
-      title: 'Layered Cove Architectural Residence',
-      category: 'ceilings',
-      categoryLabel: 'False Ceilings',
-      image: 'assets/service-ceiling.jpg',
-      craftTags: ['Saint-Gobain Gyproc', 'Magnetic Tracks', 'Zero Snag Flush'],
-      location: 'Madhapur, Hyderabad',
-      scope: 'Whole-Home Architectural False Ceilings',
-      duration: '20 Days',
-      materials: 'Gyproc Boards, Magnetic Track Rails, Concealed AC Vents',
-      desc: 'A comprehensive false ceiling commission featuring perimeter negative reveals, laser-calibrated flush magnetic lighting channels, and seamless integration of concealed VRV air conditioning supply diffusers.'
-    },
-    {
-      id: 'proj-7',
-      title: 'Astor Executive Corporate Suites',
-      category: 'commercial',
-      categoryLabel: 'Commercial Interiors',
-      image: 'assets/project-commercial.jpg',
-      craftTags: ['Acoustic Slats', 'Marble Reception', 'Glazed Executive Rooms'],
-      location: 'Hitec City, Hyderabad',
-      scope: 'Executive Corporate Headquarters Interior',
-      duration: '50 Days',
-      materials: 'Fluted American Walnut, Italian Marble Desk, Acoustic Glass',
-      desc: 'A prestigious boutique commercial corporate interior incorporating fluted American walnut wall cladding, acoustic slatted ceilings, a sculptural bookmatched marble reception desk, and sound-insulated executive boardrooms.'
-    },
-    {
-      id: 'proj-8',
-      title: 'Fluted Glass Atelier Partition',
-      category: 'commercial',
-      categoryLabel: 'Commercial Interiors / Partitions',
-      image: 'assets/service-glass.jpg',
-      craftTags: ['12mm Reeded Glass', 'Matte Black Aluminum', 'Pivot Door'],
-      location: 'Vijayawada, Andhra Pradesh',
-      scope: 'Conference & Executive Spatial Divider',
-      duration: '15 Days',
-      materials: 'Saint-Gobain Reeded Glass, Anodized Structural Aluminum',
-      desc: 'Architectural fluted glass partition wall that diffuses light beautifully while maintaining absolute visual privacy and acoustic damping for a high-end private client office.'
-    }
-  ];
+  const PROJECTS_DATA = [];
 
   // ==========================================================================
   // 1. CINEMATIC WELCOME INTRO VIDEO EXPERIENCE (Responsive Desktop & Mobile)
@@ -520,6 +416,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtered = categoryFilter === 'all'
       ? PROJECTS_DATA
       : PROJECTS_DATA.filter(p => p.category === categoryFilter);
+
+    if (filtered.length === 0) {
+      projectsGridContainer.innerHTML = `
+        <div class="portfolio-updating-card">
+          <div class="portfolio-updating-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+          <span class="editorial-badge" style="margin-bottom: 0.75rem;">Signature Portfolio</span>
+          <h3 class="portfolio-updating-title">New Projects Gallery Coming Soon</h3>
+          <p class="portfolio-updating-desc">
+            We are currently documenting our latest completed residential and commercial interior projects across Hyderabad and Andhra Pradesh.
+          </p>
+          <p class="portfolio-updating-sub" style="margin-bottom: 0;">
+            Real-time project showcases, floor plans, and photography will be updated directly here.
+          </p>
+        </div>
+      `;
+      return;
+    }
 
     filtered.forEach(proj => {
       const card = document.createElement('article');
@@ -974,6 +893,61 @@ document.addEventListener('DOMContentLoaded', () => {
   if (currentYearSpan) {
     currentYearSpan.textContent = new Date().getFullYear();
   }
+
+  // ==========================================================================
+  // 11. SCROLL REVEAL (Left-to-Right Bidirectional Scroll Animations)
+  // Re-animates smoothly when scrolling down and scrolling top (bidirectional)
+  // ==========================================================================
+  function initScrollReveal() {
+    const autoRevealSelectors = [
+      '.section-header',
+      '.about-grid > div',
+      '.pillar-item',
+      '.service-card',
+      '.why-card',
+      '.process-step',
+      '.faq-item',
+      '.estimator-card',
+      '.portfolio-updating-card'
+    ];
+
+    autoRevealSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach((el, idx) => {
+        if (!el.classList.contains('scroll-reveal')) {
+          el.classList.add('scroll-reveal');
+          const staggerIndex = (idx % 4) + 1;
+          el.classList.add(`stagger-${staggerIndex}`);
+        }
+      });
+    });
+
+    const revealElements = document.querySelectorAll('.scroll-reveal');
+    if (!('IntersectionObserver' in window) || revealElements.length === 0) {
+      revealElements.forEach(el => el.classList.add('revealed'));
+      return;
+    }
+
+    const scrollRevealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        } else {
+          // When scrolled past (above or below), remove revealed so it wakes up again on reverse scroll
+          const rect = entry.boundingClientRect;
+          if (rect.top > window.innerHeight || rect.bottom < 0) {
+            entry.target.classList.remove('revealed');
+          }
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    revealElements.forEach(el => scrollRevealObserver.observe(el));
+  }
+
+  initScrollReveal();
 
 });
 
