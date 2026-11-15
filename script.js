@@ -168,6 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (introFallbackTimer) clearTimeout(introFallbackTimer);
     if (introMaxDurationTimer) clearTimeout(introMaxDurationTimer);
 
+    document.body.classList.add('site-revealed');
+
     if (!welcomeIntro) return;
 
     if (immediate) {
@@ -932,9 +934,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
         } else {
-          // When scrolled past (above or below), remove revealed so it wakes up again on reverse scroll
+          // Reset when scrolled past (above or below) with a clean buffer
           const rect = entry.boundingClientRect;
-          if (rect.top > window.innerHeight || rect.bottom < 0) {
+          if (rect.top > window.innerHeight + 80 || rect.bottom < -80) {
             entry.target.classList.remove('revealed');
           }
         }
@@ -954,42 +956,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Moves "YOUR DREAM SPACE, OUR MASTERPIECE" horizontally when scrolling down
   // and smoothly glides back into place when scrolling top
   // ==========================================================================
-  const heroLine1 = document.querySelector('.hero-line-1');
-  const heroLine2 = document.querySelector('.hero-line-2');
-  const heroSupportingText = document.querySelector('.hero-supporting');
-
   let heroParallaxTicking = false;
 
   function updateHeroParallax() {
     const scrollY = window.pageYOffset || document.documentElement.scrollTop;
     const heroSection = document.getElementById('home');
-    const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
+    const heroHeight = heroSection ? heroSection.offsetHeight : (window.innerHeight || 800);
 
-    if (scrollY <= heroHeight + 50) {
-      const progress = scrollY / heroHeight;
+    if (scrollY <= heroHeight + 150) {
+      const progress = Math.min(scrollY / (heroHeight * 0.85), 1);
       const isMobile = window.innerWidth < 768;
 
       // Line 1 moves from left to right as you scroll down
-      const maxShift1 = isMobile ? 32 : 70;
-      const shift1 = progress * maxShift1;
+      const shift1 = progress * (isMobile ? 45 : 120);
 
-      // Line 2 glides with dynamic offset from left to right
-      const maxShift2 = isMobile ? 48 : 110;
-      const shift2 = progress * maxShift2;
+      // Line 2 glides with a stronger offset from left to right
+      const shift2 = progress * (isMobile ? 70 : 190);
 
-      // Supporting paragraph subtle drift
-      const maxShiftSupp = isMobile ? 20 : 40;
-      const shiftSupp = progress * maxShiftSupp;
+      // Supporting paragraph moves with a gentle offset
+      const shiftSupp = progress * (isMobile ? 30 : 70);
 
-      if (heroLine1) {
-        heroLine1.style.transform = `translate3d(${shift1}px, 0, 0)`;
-      }
-      if (heroLine2) {
-        heroLine2.style.transform = `translate3d(${shift2}px, 0, 0)`;
-      }
-      if (heroSupportingText) {
-        heroSupportingText.style.transform = `translate3d(${shiftSupp}px, 0, 0)`;
-      }
+      document.documentElement.style.setProperty('--hero-shift-1', `${shift1.toFixed(1)}px`);
+      document.documentElement.style.setProperty('--hero-shift-2', `${shift2.toFixed(1)}px`);
+      document.documentElement.style.setProperty('--hero-shift-supp', `${shiftSupp.toFixed(1)}px`);
     }
     heroParallaxTicking = false;
   }
@@ -1000,6 +989,8 @@ document.addEventListener('DOMContentLoaded', () => {
       heroParallaxTicking = true;
     }
   }, { passive: true });
+
+  updateHeroParallax();
 
 });
 
